@@ -26,7 +26,7 @@ class MovieController extends Controller
      */
     public function create()
     {
-        //
+        return view('movies.create');
     }
 
     /**
@@ -37,7 +37,28 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $data_request = $request->all();
+
+      $request->validate([
+        'title' => 'required|max:255',
+        'year' => 'required|integer|min:1895|max:2020',
+        'description' => 'required',
+        'rating' => 'required|integer|max: 10|min: 0'
+      ]);
+
+      $new_movie = new Movie();
+      $new_movie->title = $data_request['title'];
+      $new_movie->year = $data_request['year'];
+      $new_movie->description = $data_request['description'];
+      $new_movie->rating = $data_request['rating'];
+
+      $saved = $new_movie->save();
+
+      if($saved) {
+        $movie_saved = Movie::orderBy('id', 'desc')->first();
+        return redirect()->route('movies.show', $movie_saved);
+      }
+
     }
 
     /**
