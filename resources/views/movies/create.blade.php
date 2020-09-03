@@ -21,7 +21,7 @@
 <input type="text" name="year" value="{{old('year')}}"><br>
 
 <label>Description</label><br>
-<textarea name="description" rows="8" cols="80" value="{{old('description')}}"></textarea><br>
+<textarea name="description" rows="8" cols="80">{{old('description')}}</textarea><br>
 
 <label>Rating</label><br>
 <input type="text" name="rating" value="{{old('rating')}}"><br>

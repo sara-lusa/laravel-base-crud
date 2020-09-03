@@ -37,21 +37,15 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
+      $request->validate($this->getValidation());
       $data_request = $request->all();
 
-      $request->validate([
-        'title' => 'required|max:255',
-        'year' => 'required|integer|min:1895|max:2020',
-        'description' => 'required',
-        'rating' => 'required|integer|max: 10|min: 0'
-      ]);
-
       $new_movie = new Movie();
-      $new_movie->title = $data_request['title'];
-      $new_movie->year = $data_request['year'];
-      $new_movie->description = $data_request['description'];
-      $new_movie->rating = $data_request['rating'];
-
+      // $new_movie->title = $data_request['title'];
+      // $new_movie->year = $data_request['year'];
+      // $new_movie->description = $data_request['description'];
+      // $new_movie->rating = $data_request['rating'];
+      $new_movie->fill($data_request);
       $saved = $new_movie->save();
 
       if($saved) {
@@ -78,9 +72,9 @@ class MovieController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Movie $movie)
     {
-        //
+        return view('movies.edit', compact('movie'));
     }
 
     /**
@@ -90,9 +84,14 @@ class MovieController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Movie $movie)
     {
-        //
+        $request->validate($this->getValidation());
+        $data_request = $request->all();
+
+        $movie->update($data_request);
+
+        return redirect()->route('movies.show', $movie->id);
     }
 
     /**
@@ -104,5 +103,15 @@ class MovieController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    protected function getValidation()
+    {
+      return [
+        'title' => 'required|max:255',
+        'year' => 'required|integer|min:1895|max:2020',
+        'description' => 'required',
+        'rating' => 'required|integer|max: 10|min: 0'
+      ];
     }
 }
